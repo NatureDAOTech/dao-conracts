@@ -1,6 +1,5 @@
 pragma solidity ^0.8.0;
 import "./base/ERC20.sol";
-//contracts/base/Base64.sol
 contract NDao is ERC20{
 
     address public generalInvestors;
@@ -11,7 +10,6 @@ contract NDao is ERC20{
     // setters required
 
     constructor () ERC20 ("Nature_Dao","ND") {
-        _totalSupply = 10 ** 10; //setting up totalSupply as 10 billion
         initialMinter(10000000); //minting 10 million tokens to different parties
     }
 
