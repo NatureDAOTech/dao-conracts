@@ -61,7 +61,7 @@ contract NDAOICO is NDAO{
             investmentRaised += msg.value;
         }
     }
-    
+
     function getIcoStatus() internal {
         if(block.timestamp < icoStartTime)
         icoStatus = Status.inactive;
