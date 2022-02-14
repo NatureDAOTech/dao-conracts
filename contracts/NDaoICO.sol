@@ -5,9 +5,9 @@ import "./base/ReentrancyGuard.sol";
 import './base/IERC20.sol';
 
 
-contract NDAOICO is NDAO{
+contract NDAOICO is Ownable{
 
-    address maticUSDTAddress = 0xfe4f5145f6e09952a5ba9e956ed0c25e3fa4c7f1;
+    address maticUSDTAddress = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
     address public admin;
     address payable public recipient;
 
@@ -32,7 +32,7 @@ contract NDAOICO is NDAO{
         icoStartTime = _icoStartTime;
         icoEndTime = _icoStartTime+7 days;
         icoTarget = target;
-        NDAO = IERC20(_NDAO);
+        NDao = IERC20(_NDAO);
         mUSDT = IERC20(maticUSDTAddress);
     }
 
@@ -60,7 +60,7 @@ contract NDAOICO is NDAO{
         NDao.transfer(_msgSender(),_tokenToGive * 1 ether);
         tokenSold+= _tokenToGive;
         investmentRaised+=(_tokenToGive*basePriceNDAO);
-        emit(_amountToInvest, _amountToInvest - (_tokenToGive* basePriceNDAO), _tokenToGive);
+        emit InvestResult(_amountToInvest, _amountToInvest - (_tokenToGive* basePriceNDAO), _tokenToGive);
     }
 
     function withdrawUnsoldNDaoTokens() external {
