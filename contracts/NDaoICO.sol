@@ -9,6 +9,7 @@ contract NDAOICO is Ownable{
 
     address maticUSDTAddress = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
     address public admin;
+    event InvestResult(uint _amountWantToInvested, uint _amountInvested, uint _tokenPurchased);
     address payable public recipient;
 
 //    uint public basePriceNDAO = 0.25 *10**6;
@@ -50,7 +51,6 @@ contract NDAOICO is Ownable{
     }
 
     //assuming this ICO contract will be holding the 40% of 1million initial minted token i.e. 400,000 tokens will be utilised in this ICO
-    event InvestResult(uint _amountWantToInvested, uint _amountINvest, uint _tokenPurchased);
     function Invest (uint _amountToInvest) external {
         getIcoStatus();
         require (icoStatus == Status.active,"ICO Ended");

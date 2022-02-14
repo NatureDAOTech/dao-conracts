@@ -24,7 +24,6 @@ async function main() {
 
   token = token.deployed()
 
-  await token.setGI (ico.address);
   await token.setCT (player1.address);
   await token.setCoreTeam (player2.address);
   await token.setAdv (player3.address);
@@ -32,6 +31,7 @@ async function main() {
 
   let ico = await NDAOICO.deploy(player1.address, token.address, 1644758027, 1000000)
   ico = ico.deployed()
+  await token.setGI (ico.address);
 
   await ico.setStatusToActive();
 }
