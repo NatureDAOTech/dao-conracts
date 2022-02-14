@@ -32,8 +32,8 @@ async function main() {
   let ico = await NDAOICO.deploy(player1.address, token.address, 1644758027, 1000000)
   ico = ico.deployed()
   await token.setGI (ico.address);
-
   await ico.setStatusToActive();
+  // console.log()
 }
 
 // We recommend this pattern to be able to use async/await everywhere

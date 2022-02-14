@@ -9,18 +9,16 @@ contract NDAOICO is Ownable{
 
     address maticUSDTAddress = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
     address public admin;
-    event InvestResult(uint _amountWantToInvested, uint _amountInvested, uint _tokenPurchased);
     address payable public recipient;
 
 //    uint public basePriceNDAO = 0.25 *10**6;
     uint public basePriceNDAO = 0.25 *10**18;
     uint public maxInvestPerPerson;
-    uint public minInvestPerPerson;
-    uint public icoTarget;
+//    uint public icoTarget;
     uint public icoStartTime;
     uint public icoEndTime;
     uint public investmentRaised;
-    uint public tokenSold;
+//    uint public tokenSold;
 
     enum Status{inactive, active, stopped, completed}
     Status public icoStatus;
@@ -32,16 +30,19 @@ contract NDAOICO is Ownable{
         recipient = _recipient;
         icoStartTime = _icoStartTime;
         icoEndTime = _icoStartTime+7 days;
-        icoTarget = target;
         NDao = IERC20(_NDAO);
         mUSDT = IERC20(maticUSDTAddress);
     }
 
-    function setStatusToActive() external onlyOwner{
+    function setICOStartTime(uint _time) external {
+        icoStartTime = _time;
+    }
+
+    function setStatusToActive() external onlyOwner {
         icoStatus = Status.active;
     }
 
-    function setStatusToStopped() external onlyOwner{
+    function setStatusToStopped() external onlyOwner {
         icoStatus = Status.stopped;
     }
 
@@ -54,18 +55,17 @@ contract NDAOICO is Ownable{
     function Invest (uint _amountToInvest) external {
         getIcoStatus();
         require (icoStatus == Status.active,"ICO Ended");
-        require (investmentRaised + _amountToInvest <= icoTarget, "Overflow");
+//        require (investmentRaised + _amountToInvest <= , "Overflow"); //todo: change this one
         uint _tokenToGive = _amountToInvest/basePriceNDAO;
         mUSDT.transferFrom(_msgSender(),address(this),_tokenToGive* basePriceNDAO);
         NDao.transfer(_msgSender(),_tokenToGive * 1 ether);
         tokenSold+= _tokenToGive;
         investmentRaised+=(_tokenToGive*basePriceNDAO);
-        emit InvestResult(_amountToInvest, _amountToInvest - (_tokenToGive* basePriceNDAO), _tokenToGive);
     }
 
-    function withdrawUnsoldNDaoTokens() external {
+    function withdrawUnsoldNDaoTokens(address _recipient) external onlyOwner {
         require(icoStatus == Status.completed, "ICO not completed yet");
-        NDao.transfer(recipient, NDao.balanceOf(address(this)));
+        NDao.transfer(_recipient, NDao.balanceOf(address(this)));
     }
 
 //This needs to be optimised
