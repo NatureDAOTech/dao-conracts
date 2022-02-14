@@ -31,10 +31,10 @@ contract NDAO is ERC20, Ownable{
     }
 
     constructor () ERC20 ("NatureDAO","NDAO") {
-        initialMinter(10000000); //minting 10 million tokens to different parties
+        //minting 10 million tokens to different parties
     }
 
-    function initialMinter(uint _amount) internal {
+    function initialMinter(uint _amount) external onlyOwner {
         uint _giValue = 40*_amount/100;
         _mint(generalInvestors, _giValue);
         uint _ctValue = 30 * _amount / 100;

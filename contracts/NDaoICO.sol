@@ -2,14 +2,17 @@ pragma solidity ^0.8.7;
 import "./NDAO.sol";
 import "./base/Ownable.sol";
 import "./base/ReentrancyGuard.sol";
+import './base/IERC20.sol';
+
 
 contract NDAOICO is NDAO{
 
-    address MaticUSDTAddress = 0xc2132d05d31c914a87c6611c10748aeb04b58e8f;
+    address maticUSDTAddress = 0xfe4f5145f6e09952a5ba9e956ed0c25e3fa4c7f1;
     address public admin;
     address payable public recipient;
 
-    uint public basePriceNDAO = 0.25 ether;
+//    uint public basePriceNDAO = 0.25 *10**6;
+    uint public basePriceNDAO = 0.25 *10**18;
     uint public maxInvestPerPerson;
     uint public minInvestPerPerson;
     uint public icoTarget;
@@ -20,14 +23,17 @@ contract NDAOICO is NDAO{
 
     enum Status{inactive, active, stopped, completed}
     Status public icoStatus;
+    IERC20 mUSDT;
+    IERC20 NDao;
 
-    constructor(address payable _recipient, uint _icoStartTime, uint _icoEndTime, uint target){
-        require(_icoStartTime < _icoEndTime && target != 0, "Enter data correctly");
+    constructor(address payable _recipient, address _NDAO, uint _icoStartTime, uint target){
         admin = _msgSender();
         recipient = _recipient;
         icoStartTime = _icoStartTime;
-        icoEndTime = _icoEndTime;
+        icoEndTime = _icoStartTime+7 days;
         icoTarget = target;
+        NDAO = IERC20(_NDAO);
+        mUSDT = IERC20(maticUSDTAddress);
     }
 
     function setStatusToActive() external onlyOwner{
@@ -38,30 +44,31 @@ contract NDAOICO is NDAO{
         icoStatus = Status.stopped;
     }
 
-    function ExtractInvestment() public onlyOwner{
+    function ExtractInvestment() public {
         require(icoStatus == Status.completed, "ICO not completed yet");
-        recipient.transfer(address(this).balance);
+        mUSDT.transfer(recipient, mUSDT.balanceOf(address(this)));
     }
 
-    function Invest() public payable nonReentrant{
+    //assuming this ICO contract will be holding the 40% of 1million initial minted token i.e. 400,000 tokens will be utilised in this ICO
+    event InvestResult(uint _amountWantToInvested, uint _amountINvest, uint _tokenPurchased);
+    function Invest (uint _amountToInvest) external {
         getIcoStatus();
-        require(icoStatus == Status.active, "ICO ended");
-        if(investmentRaised + msg.value <= icoTarget){
-            uint tokenToBuy = msg.value/basePriceNDAO;
-            transfer(_msgSender(), tokenToBuy);
-            tokenSold+=tokenToBuy;
-            investmentRaised += msg.value;
-        }
-        else{
-            exceedBalance = icoTarget - investmentRaised - msg.value;
-            _msgSender().transfer(exceedBalance);
-            uint tokenToBuy = (icoTarget - investmentRaised)/basePriceNDAO;
-            transfer(_msgSender(), tokenToBuy);
-            tokenSold+=tokenToBuy;
-            investmentRaised += msg.value;
-        }
+        require (icoStatus == Status.active,"ICO Ended");
+        require (investmentRaised + _amountToInvest <= icoTarget, "Overflow");
+        uint _tokenToGive = _amountToInvest/basePriceNDAO;
+        mUSDT.transferFrom(_msgSender(),address(this),_tokenToGive* basePriceNDAO);
+        NDao.transfer(_msgSender(),_tokenToGive * 1 ether);
+        tokenSold+= _tokenToGive;
+        investmentRaised+=(_tokenToGive*basePriceNDAO);
+        emit(_amountToInvest, _amountToInvest - (_tokenToGive* basePriceNDAO), _tokenToGive);
     }
 
+    function withdrawUnsoldNDaoTokens() external {
+        require(icoStatus == Status.completed, "ICO not completed yet");
+        NDao.transfer(recipient, NDao.balanceOf(address(this)));
+    }
+
+//This needs to be optimised
     function getIcoStatus() internal {
         if(block.timestamp < icoStartTime)
         icoStatus = Status.inactive;
@@ -72,5 +79,4 @@ contract NDAOICO is NDAO{
         else
         icoStatus = Status.stopped;
     }
-
 }
