@@ -6,9 +6,8 @@ contract NDAO is ERC20, Ownable{
 
     address public generalInvestors;
     address public communityTreasury;
-    address public coreTeam;
-    address public advisors;
-    address public auditors;
+    address public vestingAddress;
+
 
     function setGI(address _GIAddress) external onlyOwner{
         generalInvestors = _GIAddress;
@@ -18,16 +17,8 @@ contract NDAO is ERC20, Ownable{
         communityTreasury = _CTAddress;
     }
 
-    function setCoreTeam(address _CoreTAddress) external onlyOwner{
-        coreTeam = _CoreTAddress;
-    }
-
-    function setAdv(address _advAddress) external onlyOwner{
-        advisors = _advAddress;
-    }
-
-    function setAuditors(address _AuditAddress) external onlyOwner{
-        auditors = _AuditAddress;
+    function setCoreTeam(address _VestingAddress) external onlyOwner{
+        vestingAddress = _VestingAddress;
     }
 
     constructor () ERC20 ("NatureDAO","NDAO") {
@@ -39,12 +30,9 @@ contract NDAO is ERC20, Ownable{
         _mint(generalInvestors, _giValue);
         uint _ctValue = 30 * _amount / 100;
         _mint (communityTreasury , _ctValue);
-        uint _teamValue = 20 * _amount/100;
-        _mint (coreTeam, _teamValue);
-        uint _advisorValue = 5* _amount / 100;
-        _mint(advisors, _advisorValue);
-        uint _auditorValue = 5* _amount / 100;
-        _mint(auditors, _auditorValue);
+        uint _teamValue = 30 * _amount/100;
+        _mint (vestingAddress, _teamValue);
+        
     }
 
 }

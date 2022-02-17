@@ -9,16 +9,15 @@ contract NDAOICO is Ownable{
 
     address maticUSDTAddress = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
     address public admin;
-    address payable public recipient;
 
-//    uint public basePriceNDAO = 0.25 *10**6;
-    uint public basePriceNDAO = 0.25 *10**18;
-    uint public maxInvestPerPerson;
-//    uint public icoTarget;
+    uint public basePriceNDAO = 0.25 *10**6;
+//  uint public basePriceNDAO = 0.25 *10**18; 
+//  uint public maxInvestPerPerson;
+//  uint public icoTarget;
     uint public icoStartTime;
     uint public icoEndTime;
-    uint public investmentRaised;
-//    uint public tokenSold;
+//  uint public investmentRaised;
+//  uint public tokenSold;
 
     enum Status{inactive, active, stopped, completed}
     Status public icoStatus;
@@ -45,6 +44,12 @@ contract NDAOICO is Ownable{
     function setStatusToStopped() external onlyOwner {
         icoStatus = Status.stopped;
     }
+
+
+// TODO 1 : Allow users to buy 1 NDAO for 0.25 USDT
+// TODO 2 : Lock 50% of user's investment for x duration and transfer the other 50% instantly
+// QUERY 1 : Are on investments unlocked on the same day or in constant time from buy
+// 
 
     function ExtractInvestment() public {
         require(icoStatus == Status.completed, "ICO not completed yet");
