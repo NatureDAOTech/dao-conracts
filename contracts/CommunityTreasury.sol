@@ -1,9 +1,10 @@
-//SDPX-License-Identifier: UNLICENSED
+//SPDX-License-Identifier: UNLICENSED
 
 pragma solidity ^0.8.0;
 
 import "./base/IERC20.sol";
 import "./Signer.sol";
+
 contract Treasury is signerCheck{
 
     struct party{
@@ -38,6 +39,5 @@ contract Treasury is signerCheck{
         require(count >= 3,"Quorum not reached");
         IERC20(contractAddress).transfer(msg.sender,amount);
     }
-
 
 }
