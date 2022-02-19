@@ -80,7 +80,7 @@ abstract contract EIP712 {
         bytes32 nameHash,
         bytes32 versionHash
     ) private view returns (bytes32) {
-        return keccak256(abi.encode(typeHash, nameHash, versionHash, 4, 0x15Cfdee3e13430947Ac8cAa4f85Fe6F33d3a5F8F));
+        return keccak256(abi.encode(typeHash, nameHash, versionHash, address(this), block.chainid));
     }
 
     /**
