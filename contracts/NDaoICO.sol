@@ -47,8 +47,7 @@ contract NDAOICO is Ownable{
 
 // TODO 1 : Allow users to buy 1 NDAO for 0.25 USDT
 // TODO 2 : Lock 50% of user's investment for x duration and transfer the other 50% instantly
-// QUERY 1 : Are on investments unlocked on the same day or in constant time from buy
-// 
+
 
     function ExtractInvestment() public {
         require(icoStatus == Status.completed, "ICO not completed yet");
