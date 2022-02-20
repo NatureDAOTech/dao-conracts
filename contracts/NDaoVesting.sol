@@ -30,7 +30,7 @@ contract NDAOVesting {
         devsLastClaimTime = block.timestamp;
         startTime = block.timestamp;
         co_founder = _cofounder;
-        for (uint i;i<devs.length;i++)
+        for (uint i;i<_devs.length;i++)
             devs.push(_devs[i]);
     }
     function claimAdvisorAndAuditorMonthlyRemuneration() external {

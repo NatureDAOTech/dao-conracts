@@ -11,7 +11,7 @@ contract Treasury is signerCheck{
         bool isParty;
         uint8 index;
     }
-    
+
     mapping(address=>party) holders;
 
     mapping(uint=>bool) proposalFulfilled;
