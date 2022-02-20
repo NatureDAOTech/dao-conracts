@@ -16,7 +16,6 @@ contract CrowdFundNDAO is Ownable, Pausable, Initializable{
     uint public basePriceNDAO = 0.25 *10**6;
     uint public startTime;
     bool private _paused;
-    mapping(address => bool) isLaunched;
     constructor(address _mUSDT, address _NDAO){
         mUSDT = IERC20(_mUSDT);
         NDao = IERC20(_NDAO);
