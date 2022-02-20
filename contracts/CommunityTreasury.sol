@@ -38,7 +38,11 @@ contract Treasury is signerCheck{
         }
         require(count >= 3,"Quorum not reached");
         proposalFulfilled[proposalId] = true;
-        IERC20(contractAddress).transfer(msg.sender,amount);
+        IERC20(contractAddress).transfer(receiver,amount);
+    }
+
+    function getChain() external view returns(uint){
+        return block.chainid;
     }
 
 }

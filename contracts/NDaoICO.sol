@@ -4,9 +4,11 @@ import "./NDAO.sol";
 import "./base/Ownable.sol";
 import "./base/ReentrancyGuard.sol";
 import './base/IERC20.sol';
+import './base/Pausable.sol';
+import "./base/Initializable.sol";
 
 
-contract NDAOICO is Ownable{
+contract CrowdFundNDAO is Ownable, Pausable{
 
     address maticUSDTAddress =   0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
 //    address public admin;
@@ -43,11 +45,6 @@ contract NDAOICO is Ownable{
 //    function setStatusToStopped() external onlyOwner {
 //        icoStatus = Status.stopped;
 //    }
-
-
-// TODO 1 : Allow users to buy 1 NDAO for 0.25 USDT
-// TODO 2 : Lock 50% of user's investment for x duration and transfer the other 50% instantly
-
 
     function ExtractInvestment() public {
         require(icoStatus == Status.completed, "ICO not completed yet");
