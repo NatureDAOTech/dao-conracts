@@ -8,7 +8,7 @@ import './base/Pausable.sol';
 import "./base/Initializable.sol";
 
 
-contract CrowdFundNDAO is Ownable, Pausable, Initializable{
+contract CrowdFundNDAO is Ownable, Pausable{
 
     IERC20 NDao;
     IERC20 mUSDT;
@@ -16,12 +16,12 @@ contract CrowdFundNDAO is Ownable, Pausable, Initializable{
     uint public basePriceNDAO = 0.25 *10**6;
     uint public startTime;
     bool private _paused;
-    constructor(address _mUSDT, address _NDAO){
+    constructor(address _mUSDT, address _NDAO) {
         mUSDT = IERC20(_mUSDT);
         NDao = IERC20(_NDAO);
     }
 
-    function Invest (uint _tokensToBuy) external whenNotPaused{
+    function Invest (uint _tokensToBuy) external whenNotPaused {
         uint amount = _tokensToBuy* basePriceNDAO;
         mUSDT.transferFrom(_msgSender(),address(this),amount);
         NDao.transfer(_msgSender(), _tokensToBuy);
@@ -33,16 +33,6 @@ contract CrowdFundNDAO is Ownable, Pausable, Initializable{
 
     function ExtractInvestment() public {
         mUSDT.transfer(owner(), mUSDT.balanceOf(address(this)));
-    }
-
-    function initialize()
-    public
-    virtual
-    override(Pausable, Ownable)
-    initializer onlyOwner
-    {
-        Pausable.initialize();
-        Ownable.initialize();
     }
 
     function setPaused(bool _paused) external onlyOwner {

@@ -34,10 +34,6 @@ abstract contract Pausable is Context {
         _paused = false;
     }
 
-    function initialize() public virtual {
-        _setPaused(false);
-    }
-
     /**
      * @dev Returns true if the contract is paused, and false otherwise.
      */
@@ -91,9 +87,5 @@ abstract contract Pausable is Context {
     function _unpause() internal virtual whenPaused {
         _paused = false;
         emit Unpaused(_msgSender());
-    }
-
-    function _setPaused(bool status) private {
-        _paused = status;
     }
 }
