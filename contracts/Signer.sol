@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "../base/EIP712.sol";
+import "./base/EIP712.sol";
 
 contract signerCheck is EIP712{
 

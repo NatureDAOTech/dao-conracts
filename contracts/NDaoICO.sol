@@ -1,85 +1,53 @@
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
 import "./NDAO.sol";
 import "./base/Ownable.sol";
 import "./base/ReentrancyGuard.sol";
 import './base/IERC20.sol';
+import './base/Pausable.sol';
+import "./base/Initializable.sol";
 
 
-contract NDAOICO is Ownable{
+contract CrowdFundNDAO is Ownable, Pausable, Initializable{
 
-    address maticUSDTAddress = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
-    address public admin;
-
-    uint public basePriceNDAO = 0.25 *10**6;
-//  uint public basePriceNDAO = 0.25 *10**18; 
-//  uint public maxInvestPerPerson;
-//  uint public icoTarget;
-    uint public icoStartTime;
-    uint public icoEndTime;
-//  uint public investmentRaised;
-//  uint public tokenSold;
-
-    enum Status{inactive, active, stopped, completed}
-    Status public icoStatus;
-    IERC20 mUSDT;
     IERC20 NDao;
-
-    constructor(address payable _recipient, address _NDAO, uint _icoStartTime, uint target){
-        admin = _msgSender();
-        recipient = _recipient;
-        icoStartTime = _icoStartTime;
-        icoEndTime = _icoStartTime+7 days;
+    IERC20 mUSDT;
+    address maticUSDT = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
+    uint public basePriceNDAO = 0.25 *10**6;
+    uint public startTime;
+    bool private _paused;
+    mapping(address => bool) isLaunched;
+    constructor(address _mUSDT, address _NDAO){
+        mUSDT = IERC20(_mUSDT);
         NDao = IERC20(_NDAO);
-        mUSDT = IERC20(maticUSDTAddress);
     }
 
-    function setICOStartTime(uint _time) external {
-        icoStartTime = _time;
+    function Invest (uint _tokensToBuy) external whenNotPaused{
+        uint amount = _tokensToBuy* basePriceNDAO;
+        mUSDT.transferFrom(_msgSender(),address(this),amount);
+        NDao.transfer(_msgSender(), _tokensToBuy);
     }
 
-    function setStatusToActive() external onlyOwner {
-        icoStatus = Status.active;
+    function withdrawUnsoldNDaoTokens() external onlyOwner {
+        NDao.transfer(_msgSender(), NDao.balanceOf(address(this)));
     }
-
-    function setStatusToStopped() external onlyOwner {
-        icoStatus = Status.stopped;
-    }
-
-
-// TODO 1 : Allow users to buy 1 NDAO for 0.25 USDT
-// TODO 2 : Lock 50% of user's investment for x duration and transfer the other 50% instantly
-
 
     function ExtractInvestment() public {
-        require(icoStatus == Status.completed, "ICO not completed yet");
-        mUSDT.transfer(recipient, mUSDT.balanceOf(address(this)));
+        mUSDT.transfer(owner(), mUSDT.balanceOf(address(this)));
     }
 
-    //assuming this ICO contract will be holding the 40% of 1million initial minted token i.e. 400,000 tokens will be utilised in this ICO
-    function Invest (uint _amountToInvest) external {
-        getIcoStatus();
-        require (icoStatus == Status.active,"ICO Ended");
-        uint _tokenToGive = _amountToInvest/basePriceNDAO;
-        mUSDT.transferFrom(_msgSender(),address(this),_tokenToGive* basePriceNDAO);
-        NDao.transfer(_msgSender(),_tokenToGive * 1 ether);
-        tokenSold+= _tokenToGive;
-        investmentRaised+=(_tokenToGive*basePriceNDAO);
+    function initialize()
+    public
+    virtual
+    override(Pausable, Ownable)
+    initializer onlyOwner
+    {
+        Pausable.initialize();
+        Ownable.initialize();
     }
 
-    function withdrawUnsoldNDaoTokens(address _recipient) external onlyOwner {
-        require(icoStatus == Status.completed, "ICO not completed yet");
-        NDao.transfer(_recipient, NDao.balanceOf(address(this)));
-    }
-
-//This needs to be optimised
-    function getIcoStatus() internal {
-        if(block.timestamp < icoStartTime)
-        icoStatus = Status.inactive;
-        else if(block.timestamp > icoStartTime && block.timestamp < icoEndTime)
-        icoStatus =  Status.active;
-        else if(block.timestamp > icoEndTime || investmentRaised == icoTarget)
-        icoStatus = Status.completed;
-        else
-        icoStatus = Status.stopped;
+    function setPaused(bool _paused) external onlyOwner {
+        if (_paused) _pause();
+        else _unpause();
     }
 }

@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: UNLICENSED
 
-pragma soldity ^0.8.0;
+pragma solidity ^0.8.0;
 
 import "./base/IERC20.sol";
 import "./base/Ownable.sol";
@@ -9,14 +9,27 @@ contract DAOVesting is Ownable{
 
     IERC20 NDAO;
 
+    address public Founder;
+    address public Co_Founder;
+    address public dev1;
+    address public dev2;
+    address public dev3;
+
+    uint public lockTime = 7 days;
+
+    mapping(address => uint) balance;
+
     constructor(address _ndao){
         NDAO = IERC20(_ndao);
     }
 
     function setNDAO(address _ndao) external onlyOwner{
-        
+        NDAO = IERC20(_ndao);
     }
 
+    function claimMonthlyRemuneration(address _inquirer) external{
+
+    }
     //Add in logic to unlock amount for individual participants every month
     //Save a mapping (or double mapping idk) to check if they have received amount for current month
     //Only allow retrieval after 30 days of contract initiation and 30 days every next time

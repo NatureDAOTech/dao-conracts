@@ -1,3 +1,4 @@
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
 import "./base/ERC20.sol";
 import "./base/Ownable.sol";
@@ -32,7 +33,6 @@ contract NDAO is ERC20, Ownable{
         _mint (communityTreasury , _ctValue);
         uint _teamValue = 30 * _amount/100;
         _mint (vestingAddress, _teamValue);
-        
     }
 
 }
