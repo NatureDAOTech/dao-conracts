@@ -34,11 +34,6 @@ contract NDAOVesting {
         for (uint i;i<devs.length;i++)
             devs.push(_devs[i]);
     }
-    //todo: monthly release [Done]
-    //todo: auditor, advisor only first 5 months [Done]
-    //todo: devs 2 years [Done]
-    //todo: after 2 years every one gets bonus [Done]
-
     function claimAdvisorAndAuditorMonthlyRemuneration() external {
             require(block.timestamp - advisorLastClaimTime > 2 minutes,'Min 30days to re-claim');
             require(advisorAndAuditorRelease < 5,'Remuneration period over');
@@ -59,7 +54,6 @@ contract NDAOVesting {
         NDAO.transfer(co_founder,20_000 ether);
     }
 
-    //todo please confirm the values
     function claimFinalReward() external {
         require(block.timestamp - startTime > lockTime, 'Reward Will Be Published After 2 years only');
         for (uint i;i<devs.length;i++) {
