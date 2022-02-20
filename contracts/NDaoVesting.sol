@@ -22,17 +22,7 @@ contract NDAOVesting {
     address[] founders;
     mapping(address => uint) balance;
 
-    address public Founder;
-    address public Co_Founder;
-    address public dev1;
-    address public dev2;
-    address public dev3;
-
-    uint public lockTime = 7 days;
-
-    mapping(address => uint) balance;
-
-    constructor(address _ndao){
+    constructor(address _ndao, address[] memory _devs, address _auditor, address _advisor, address _cofounder, address _founder) {
         NDAO = IERC20(_ndao);
         advisoryAndAuditor.push(_auditor);
         advisoryAndAuditor.push(_advisor);
@@ -44,18 +34,25 @@ contract NDAOVesting {
         for (uint i;i<devs.length;i++)
             devs.push(_devs[i]);
     }
-
-    function setNDAO(address _ndao) external onlyOwner{
-        NDAO = IERC20(_ndao);
+    function claimAdvisorAndAuditorMonthlyRemuneration() external {
+            require(block.timestamp - advisorLastClaimTime > 2 minutes,'Min 30days to re-claim');
+            require(advisorAndAuditorRelease < 5,'Remuneration period over');
+            advisorAndAuditorRelease++;
+            for (uint i;i<advisoryAndAuditor.length;i++) {
+                NDAO.transfer(advisoryAndAuditor[i],100_000 ether);
+            }
     }
 
-    function claimMonthlyRemuneration(address _inquirer) external{
-
+    function claimDevsAndOwnerMonthlyRemuneration() external {
+        require(block.timestamp -  devsLastClaimTime> 2 minutes,'Min 30days to re-claim');
+        require (devsRemuneration < 24,'Remuneration period over');
+        devsRemuneration++;
+        for (uint i;i<devs.length;i++) {
+            NDAO.transfer(devs[i],10_000 ether);
+        }
+        NDAO.transfer(founder,33_000 ether);
+        NDAO.transfer(co_founder,20_000 ether);
     }
-    //Add in logic to unlock amount for individual participants every month
-    //Save a mapping (or double mapping idk) to check if they have received amount for current month
-    //Only allow retrieval after 30 days of contract initiation and 30 days every next time
-    //If someone skips a turn, they should be able to make 2 (even better if 1) transaction to retrieve balance
 
     function claimFinalReward() external {
         require(block.timestamp - startTime > lockTime, 'Reward Will Be Published After 2 years only');
