@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "../base/EIP712.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/draft-EIP712.sol";
 
 contract signerCheck is EIP712{
 
@@ -21,7 +21,7 @@ contract signerCheck is EIP712{
         
     }
 
-    function getSigner(Signer memory signer) internal view returns(address){
+    function getSigner(Signer memory signer) public view returns(address){
         return _verify(signer);
     }
 
