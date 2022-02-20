@@ -48,8 +48,7 @@ contract NDAOICO is Ownable{
 
 // TODO 1 : Allow users to buy 1 NDAO for 0.25 USDT
 // TODO 2 : Lock 50% of user's investment for x duration and transfer the other 50% instantly
-// QUERY 1 : Are on investments unlocked on the same day or in constant time from buy
-// 
+
 
     function ExtractInvestment() public {
         require(icoStatus == Status.completed, "ICO not completed yet");
@@ -60,7 +59,6 @@ contract NDAOICO is Ownable{
     function Invest (uint _amountToInvest) external {
         getIcoStatus();
         require (icoStatus == Status.active,"ICO Ended");
-//        require (investmentRaised + _amountToInvest <= , "Overflow"); //todo: change this one
         uint _tokenToGive = _amountToInvest/basePriceNDAO;
         mUSDT.transferFrom(_msgSender(),address(this),_tokenToGive* basePriceNDAO);
         NDao.transfer(_msgSender(),_tokenToGive * 1 ether);
