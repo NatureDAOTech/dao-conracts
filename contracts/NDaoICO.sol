@@ -10,61 +10,33 @@ import "./base/Initializable.sol";
 
 contract CrowdFundNDAO is Ownable, Pausable{
 
-    address maticUSDTAddress =   0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
-//    address public admin;
-
-    uint public basePriceNDAO = 0.25 *10**6;
-    uint public icoStartTime;
-//    uint public icoEndTime;
-//    uint public totalSupply;
-    address public recipient;
-//    uint public tokensRaised;
-
-//    mapping(address => uint) investmentBalance;
-//    enum Status{inactive, active, stopped, completed}
-//    Status public icoStatus;
-    IERC20 mUSDT;
     IERC20 NDao;
-
-    constructor(address _NDAO, uint _icoStartTime){
-//        admin = _msgSender();
-        icoStartTime = _icoStartTime;
+    IERC20 mUSDT;
+    address maticUSDT = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
+    uint public basePriceNDAO = 0.25 *10**6;
+    uint public startTime;
+    bool private _paused;
+    constructor(address _mUSDT, address _NDAO) {
+        mUSDT = IERC20(_mUSDT);
         NDao = IERC20(_NDAO);
-        mUSDT = IERC20(maticUSDTAddress);
-        icoEndTime = icoStartTime + 7 days;
     }
 
-//    function setICOStartTime(uint _time) external {
-//        icoStartTime = _time;
-//    }
-//
-//    function setStatusToActive() external onlyOwner {
-//        icoStatus = Status.active;
-//    }
-//
-//    function setStatusToStopped() external onlyOwner {
-//        icoStatus = Status.stopped;
-//    }
-
-    function ExtractInvestment() public {
-        require(icoStatus == Status.completed, "ICO not completed yet");
-        mUSDT.transfer(recipient, mUSDT.balanceOf(address(this)));
-    }
-
-    //assuming this ICO contract will be holding the 40% of 1million initial minted token i.e. 400,000 tokens will be utilised in this ICO
-    function Invest (uint _tokensToBuy) external payable{
-        getIcoStatus();
-        require (icoStatus == Status.active,"ICO Ended");
+    function Invest (uint _tokensToBuy) external whenNotPaused {
         uint amount = _tokensToBuy* basePriceNDAO;
-        mUSDT.transferFrom(_msgSender(),address(this),amount/2);
-        mUSDT.transferFrom(_msgSender(),recipient,amount/2); //subjected to change
+        mUSDT.transferFrom(_msgSender(),address(this),amount);
         NDao.transfer(_msgSender(), _tokensToBuy);
-        tokensRaised += _tokensToBuy;
     }
 
     function withdrawUnsoldNDaoTokens() external onlyOwner {
-        require(icoStatus == Status.completed, "ICO not completed yet");
         NDao.transfer(_msgSender(), NDao.balanceOf(address(this)));
     }
 
+    function ExtractInvestment() public {
+        mUSDT.transfer(owner(), mUSDT.balanceOf(address(this)));
+    }
+
+    function setPaused(bool _paused) external onlyOwner {
+        if (_paused) _pause();
+        else _unpause();
+    }
 }
