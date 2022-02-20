@@ -75,27 +75,17 @@ contract DAOVesting is Ownable, Initializable{
         require (founderRemuneration <12,'Remuneration period over');
         founderRemuneration++;
         NDAO.transfer(founder,33_000 ether);
-        NDAO.transfer(co_founder  ,20_000 ether);
+        NDAO.transfer(co_founder,20_000 ether);
     }
 
     //todo please confirm the values
     function claimFinalReward() external {
         require(block.timestamp - startTime > lockTime, 'Reward Will Be Published After 2 years only');
         for (uint i;i<devs.length;i++) {
-            NDAO.transfer(devs[i],100_000 ether);
+            NDAO.transfer(devs[i],200_000 ether);
         }
-        for (uint j;j < advisoryAndAuditor.length;j++) {
-            NDAO.transfer(advisoryAndAuditor[j],200_000 ether);
-        }
-        NDAO.transfer(founder, 2_000_000 ether);
-        NDAO.transfer(co_founder, 1_000_000 ether);
+        NDAO.transfer(founder, 1_000_000 ether);
+        NDAO.transfer(co_founder, 400_000 ether);
 
     }
-
-
-    //Add in logic to unlock amount for individual participants every month
-    //Save a mapping (or double mapping idk) to check if they have received amount for current month
-    //Only allow retrieval after 30 days of contract initiation and 30 days every next time
-    //If someone skips a turn, they should be able to make 2 (even better if 1) transaction to retrieve balance
-
 }
