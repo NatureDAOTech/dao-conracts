@@ -24,7 +24,7 @@ contract CrowdFundNDAO is Ownable, Pausable{
     function Invest (uint _tokensToBuy) external whenNotPaused {
         uint amount = _tokensToBuy* basePriceNDAO;
         mUSDT.transferFrom(_msgSender(),address(this),amount);
-        NDao.transfer(_msgSender(), _tokensToBuy);
+        NDao.transfer(_msgSender(), _tokensToBuy* 1 ether);
     }
 
     function withdrawUnsoldNDaoTokens() external onlyOwner {
