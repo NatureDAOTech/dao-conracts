@@ -13,8 +13,6 @@ contract NDAOVesting {
     uint public advisorAndAuditorRelease;
     uint public devsRemuneration;
     uint public lockTime = 10 minutes;
-    uint public advisorLastClaimTime;
-    uint public devsLastClaimTime;
     uint public deployTime;
     uint counterForAdv = 1;
     uint counterForDevsOwner = 1;
@@ -32,38 +30,38 @@ contract NDAOVesting {
         founder = _founder;
         advisorLastClaimTime = block.timestamp;
         devsLastClaimTime = block.timestamp;
-        startTime = block.timestamp;
+        deployTime = block.timestamp;
         co_founder = _coFounder;
         for (uint i;i<_devs.length;i++)
             devs.push(_devs[i]);
     }
+
+// 
     function claimAdvisorAndAuditorMonthlyRemuneration() external {
-        require(block.timestamp >counterForAdv*(deployTime + 30 days),'Salary not unlocked');
+        require(block.timestamp > deployTime + counterForAdv*30 days,'Salary not unlocked for the next month');
         require(advisorAndAuditorRelease < 5,'Remuneration period over');
         advisorAndAuditorRelease++;
-        counterForAdv = (block.timestamp - advisorLastClaimTime)/ 30 days;
         for (uint i;i<advisoryAndAuditor.length;i++) {
-            NDAO.transfer(advisoryAndAuditor[i],monthlyGeneration* 100_000 ether);
+            NDAO.transfer(advisoryAndAuditor[i],100_000 ether);
         }
-        advisorLastClaimTime = block.timestamp;
+        counterForAdv++;
     }
 
     function claimDevsAndOwnerMonthlyRemuneration() external {
-        require(block.timestamp >counterForDevsOwner*(deployTime + 30 days),'Salary not unlocked');
+        require(block.timestamp >deployTime + counterForDevsOwner*30 days,'Salary not unlocked for the next month');
         require (devsRemuneration < 24,'Remuneration period over');
         devsRemuneration++;
-        counterForDevsOwner = (block.timestamp - devsLastClaimTime)/ 30 days;
         for (uint i;i<devs.length;i++) {
-            NDAO.transfer(devs[i],counterForDevsOwner*10_000 ether);
+            NDAO.transfer(devs[i],10_000 ether);
         }
-        NDAO.transfer(founder,counterForDevsOwner*33_000 ether);
-        NDAO.transfer(co_founder,counterForDevsOwner*20_000 ether);
-        devsLastClaimTime = block.timestamp;
+        NDAO.transfer(founder, 33_000 ether);
+        NDAO.transfer(co_founder, 20_000 ether);
+        counterForDevsOwner++;
     }
 
     function claimFinalReward() external {
         require(!finalRewardIsClaimed, "Final Reward already claimed");
-        require(block.timestamp - startTime > lockTime, 'Reward Will Be Published After 2 years only');
+        require(block.timestamp - deployTime> lockTime, 'Reward Will Be Published After 2 years only');
         for (uint i;i<devs.length;i++) {
             NDAO.transfer(devs[i],200_000 ether);
         }
