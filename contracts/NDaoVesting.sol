@@ -18,9 +18,9 @@ contract NDAOVesting {
     uint public deployTime;
     uint counterForAdv = 1;
     uint counterForDevsOwner = 1;
-    address[] advisoryAndAuditor;
-    address[] devs;
-    address[] founders;
+    address[] public advisoryAndAuditor;
+    address[] public devs;
+    address[] public founders;
     bool public finalRewardIsClaimed;
     mapping(address => uint) balance;
 
