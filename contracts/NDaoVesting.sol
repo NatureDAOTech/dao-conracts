@@ -8,10 +8,10 @@ import "./base/Ownable.sol";
 contract NDAOVesting {
 
     IERC20 NDAO;
-    address founder;
-    address co_founder;
-    uint public advisorAndAuditorRelease;
-    uint public devsRemuneration;
+    address public founder;
+    address public co_founder;
+    uint public advisorAndAuditorRelease = 1;
+    uint public devsRemuneration = 1;
     uint public lockTime = 10 minutes;
     uint public deployTime;
     uint counterForAdv = 1;
@@ -28,17 +28,14 @@ contract NDAOVesting {
         advisoryAndAuditor.push(_auditor);
         advisoryAndAuditor.push(_advisor);
         founder = _founder;
-        advisorLastClaimTime = block.timestamp;
-        devsLastClaimTime = block.timestamp;
         deployTime = block.timestamp;
         co_founder = _coFounder;
         for (uint i;i<_devs.length;i++)
             devs.push(_devs[i]);
     }
 
-// 
     function claimAdvisorAndAuditorMonthlyRemuneration() external {
-        require(block.timestamp > deployTime + counterForAdv*30 days,'Salary not unlocked for the next month');
+        require(block.timestamp > deployTime + counterForAdv*2 minutes,'Salary not unlocked for the next month');
         require(advisorAndAuditorRelease < 5,'Remuneration period over');
         advisorAndAuditorRelease++;
         for (uint i;i<advisoryAndAuditor.length;i++) {
@@ -48,10 +45,10 @@ contract NDAOVesting {
     }
 
     function claimDevsAndOwnerMonthlyRemuneration() external {
-        require(block.timestamp >deployTime + counterForDevsOwner*30 days,'Salary not unlocked for the next month');
+        require(block.timestamp > deployTime + counterForDevsOwner*2 minutes,'Salary not unlocked for the next month');
         require (devsRemuneration < 24,'Remuneration period over');
         devsRemuneration++;
-        for (uint i;i<devs.length;i++) {
+        for (uint i;i<devs.length;i++){
             NDAO.transfer(devs[i],10_000 ether);
         }
         NDAO.transfer(founder, 33_000 ether);

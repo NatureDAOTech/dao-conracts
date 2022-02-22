@@ -5,10 +5,8 @@ import "./base/Ownable.sol";
 import "./base/ReentrancyGuard.sol";
 import './base/IERC20.sol';
 import './base/Pausable.sol';
-import "./base/Initializable.sol";
 
-
-contract CrowdFundNDAO is Ownable, Pausable{
+contract CrowdFundNDAO is Ownable, Pausable, ReentrancyGuard{
 
     IERC20 NDao;
     IERC20 mUSDT;
@@ -21,7 +19,7 @@ contract CrowdFundNDAO is Ownable, Pausable{
         NDao = IERC20(_NDAO);
     }
 
-    function Invest (uint _tokensToBuy) external whenNotPaused {
+    function Invest (uint _tokensToBuy) external nonReentrant whenNotPaused{
         uint amount = _tokensToBuy* basePriceNDAO;
         mUSDT.transferFrom(_msgSender(),address(this),amount);
         NDao.transfer(_msgSender(), _tokensToBuy* 1 ether);
@@ -38,5 +36,9 @@ contract CrowdFundNDAO is Ownable, Pausable{
     function setPaused(bool _paused) external onlyOwner {
         if (_paused) _pause();
         else _unpause();
+    }
+
+    function changebasePrice(uint _amt) public onlyOwner{
+        basePriceNDAO = _amt;
     }
 }

@@ -26,13 +26,10 @@ contract NDAO is ERC20, Ownable{
         //minting 10 million tokens to different parties
     }
 
-    function initialMinter(uint _amount) external onlyOwner {
-        uint _giValue = 40*_amount/100;
-        _mint(generalInvestors, _giValue);
-        uint _ctValue = 30 * _amount / 100;
-        _mint (communityTreasury , _ctValue);
-        uint _teamValue = 30 * _amount/100;
-        _mint (vestingAddress, _teamValue);
+    function initialMinter() external onlyOwner {
+        _mint(generalInvestors, 4000000 ether);
+        _mint (communityTreasury ,3000000 ether);
+        _mint (vestingAddress, 5000000 ether);
     }
 
 }

@@ -1,69 +1,4 @@
 
-// File: contracts/base/ReentrancyGuard.sol
-
-
-// OpenZeppelin Contracts v4.4.1 (security/ReentrancyGuard.sol)
-
-pragma solidity ^0.8.0;
-
-/**
- * @dev Contract module that helps prevent reentrant calls to a function.
- *
- * Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier
- * available, which can be applied to functions to make sure there are no nested
- * (reentrant) calls to them.
- *
- * Note that because there is a single `nonReentrant` guard, functions marked as
- * `nonReentrant` may not call one another. This can be worked around by making
- * those functions `private`, and then adding `external` `nonReentrant` entry
- * points to them.
- *
- * TIP: If you would like to learn more about reentrancy and alternative ways
- * to protect against it, check out our blog post
- * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].
- */
-abstract contract ReentrancyGuard {
-    // Booleans are more expensive than uint256 or any type that takes up a full
-    // word because each write operation emits an extra SLOAD to first read the
-    // slot's contents, replace the bits taken up by the boolean, and then write
-    // back. This is the compiler's defense against contract upgrades and
-    // pointer aliasing, and it cannot be disabled.
-
-    // The values being non-zero value makes deployment a bit more expensive,
-    // but in exchange the refund on every call to nonReentrant will be lower in
-    // amount. Since refunds are capped to a percentage of the total
-    // transaction's gas, it is best to keep them low in cases like this one, to
-    // increase the likelihood of the full refund coming into effect.
-    uint256 private constant _NOT_ENTERED = 1;
-    uint256 private constant _ENTERED = 2;
-
-    uint256 private _status;
-
-    constructor() {
-        _status = _NOT_ENTERED;
-    }
-
-    /**
-     * @dev Prevents a contract from calling itself, directly or indirectly.
-     * Calling a `nonReentrant` function from another `nonReentrant`
-     * function is not supported. It is possible to prevent this from happening
-     * by making the `nonReentrant` function external, and making it call a
-     * `private` function that does the actual work.
-     */
-    modifier nonReentrant() {
-        // On the first call to nonReentrant, _notEntered will be true
-        require(_status != _ENTERED, "ReentrancyGuard: reentrant call");
-
-        // Any calls to nonReentrant after this point will fail
-        _status = _ENTERED;
-
-        _;
-
-        // By storing the original value once again, a refund is triggered (see
-        // https://eips.ethereum.org/EIPS/eip-2200)
-        _status = _NOT_ENTERED;
-    }
-}
 // File: contracts/base/Context.sol
 
 
@@ -96,107 +31,6 @@ contract Context {
         return msg.data;
     }
 }
-// File: contracts/base/Pausable.sol
-
-
-// OpenZeppelin Contracts v4.4.1 (security/Pausable.sol)
-
-pragma solidity ^0.8.0;
-
-
-/**
- * @dev Contract module which allows children to implement an emergency stop
- * mechanism that can be triggered by an authorized account.
- *
- * This module is used through inheritance. It will make available the
- * modifiers `whenNotPaused` and `whenPaused`, which can be applied to
- * the functions of your contract. Note that they will not be pausable by
- * simply including this module, only once the modifiers are put in place.
- */
-abstract contract Pausable is Context {
-    /**
-     * @dev Emitted when the pause is triggered by `account`.
-     */
-    event Paused(address account);
-
-    /**
-     * @dev Emitted when the pause is lifted by `account`.
-     */
-    event Unpaused(address account);
-
-    bool private _paused;
-
-    /**
-     * @dev Initializes the contract in unpaused state.
-     */
-    constructor() {
-        _paused = false;
-    }
-
-    function initialize() public virtual {
-        _setPaused(false);
-    }
-
-    /**
-     * @dev Returns true if the contract is paused, and false otherwise.
-     */
-    function paused() public view virtual returns (bool) {
-        return _paused;
-    }
-
-    /**
-     * @dev Modifier to make a function callable only when the contract is not paused.
-     *
-     * Requirements:
-     *
-     * - The contract must not be paused.
-     */
-    modifier whenNotPaused() {
-        require(!paused(), "Pausable: paused");
-        _;
-    }
-
-    /**
-     * @dev Modifier to make a function callable only when the contract is paused.
-     *
-     * Requirements:
-     *
-     * - The contract must be paused.
-     */
-    modifier whenPaused() {
-        require(paused(), "Pausable: not paused");
-        _;
-    }
-
-    /**
-     * @dev Triggers stopped state.
-     *
-     * Requirements:
-     *
-     * - The contract must not be paused.
-     */
-    function _pause() internal virtual whenNotPaused {
-        _paused = true;
-        emit Paused(_msgSender());
-    }
-
-    /**
-     * @dev Returns to normal state.
-     *
-     * Requirements:
-     *
-     * - The contract must be paused.
-     */
-    function _unpause() internal virtual whenPaused {
-        _paused = false;
-        emit Unpaused(_msgSender());
-    }
-
-    function _setPaused(bool status) private {
-        _paused = status;
-    }
-}
-
 // File: contracts/base/Ownable.sol
 
 
@@ -758,85 +592,24 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     ) internal virtual {}
 }
 
-// File: contracts/NDAO.sol
-pragma solidity ^0.8.7;
+// File: contracts/coin.sol
+
+
+pragma solidity ^0.8.4;
 
 
 
-contract NDAO is ERC20, Ownable{
-
-    address public generalInvestors;
-    address public communityTreasury;
-    address public vestingAddress;
-
-
-    function setGI(address _GIAddress) external onlyOwner{
-        generalInvestors = _GIAddress;
+contract Anyx is ERC20, Ownable{
+    constructor() ERC20("Anyx", "ANX") {
+        _mint(msg.sender, 1000 * (10 ** uint256(decimals())));
     }
 
-    function setCT(address _CTAddress) external onlyOwner{
-        communityTreasury = _CTAddress;
+    function decimals() public pure override returns (uint8) {
+        return 6;
     }
 
-    function setCoreTeam(address _VestingAddress) external onlyOwner{
-        vestingAddress = _VestingAddress;
+    function mintTokens(uint _amt) public onlyOwner{
+        _mint(msg.sender, _amt * (10 ** uint256(decimals())));
     }
 
-    constructor () ERC20 ("NatureDAO","NDAO") {
-        //minting 10 million tokens to different parties
-    }
-
-    function initialMinter() external onlyOwner {
-        _mint(generalInvestors, 4000000 ether);
-        _mint (communityTreasury ,3000000 ether);
-        _mint (vestingAddress, 5000000 ether);
-    }
-
-}
-
-// File: contracts/NDaoICO.sol
-
-//SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.7;
-
-
-
-
-
-
-contract CrowdFundNDAO is Ownable, Pausable, ReentrancyGuard{
-
-    IERC20 NDao;
-    IERC20 mUSDT;
-    address maticUSDT = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
-    uint public basePriceNDAO = 0.25 *10**6;
-    uint public startTime;
-    bool private _paused;
-    constructor(address _mUSDT, address _NDAO) {
-        mUSDT = IERC20(_mUSDT);
-        NDao = IERC20(_NDAO);
-    }
-
-    function Invest (uint _tokensToBuy) external nonReentrant whenNotPaused{
-        uint amount = _tokensToBuy* basePriceNDAO;
-        mUSDT.transferFrom(_msgSender(),address(this),amount);
-        NDao.transfer(_msgSender(), _tokensToBuy* 1 ether);
-    }
-
-    function withdrawUnsoldNDaoTokens() external onlyOwner {
-        NDao.transfer(_msgSender(), NDao.balanceOf(address(this)));
-    }
-
-    function ExtractInvestment() public {
-        mUSDT.transfer(owner(), mUSDT.balanceOf(address(this)));
-    }
-
-    function setPaused(bool _paused) external onlyOwner {
-        if (_paused) _pause();
-        else _unpause();
-    }
-
-    function changebasePrice(uint _amt) public onlyOwner{
-        basePriceNDAO = _amt;
-    }
 }
