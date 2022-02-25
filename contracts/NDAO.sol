@@ -18,8 +18,8 @@ contract NDAO is ERC20, Ownable{
         communityTreasury = _CTAddress;
     }
     
-    function ownerMint(uint _amount) external onlyOwner {
-        _mint(msg.sender,_amount);
+    function ownerMint(address _to, uint _amount) external onlyOwner {
+        _mint(_to, _amount);
     }
     
     function setCoreTeam(address _VestingAddress) external onlyOwner{
