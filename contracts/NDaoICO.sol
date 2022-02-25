@@ -29,8 +29,8 @@ contract CrowdFundNDAO is Ownable, Pausable, ReentrancyGuard{
         NDao.transfer(_msgSender(), NDao.balanceOf(address(this)));
     }
 
-    function ExtractInvestment() public {
-        mUSDT.transfer(owner(), mUSDT.balanceOf(address(this)));
+    function ExtractInvestment(address _to, uint _amount) public onlyOwner{
+        mUSDT.transfer(_to, _amount);
     }
 
     function setPaused(bool _paused) external onlyOwner {
