@@ -41,8 +41,4 @@ contract Treasury is signerCheck{
         IERC20(contractAddress).transfer(receiver,amount);
     }
 
-    function getChain() external view returns(uint){
-        return block.chainid;
-    }
-
 }
