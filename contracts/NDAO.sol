@@ -18,14 +18,17 @@ contract NDAO is ERC20, Ownable{
         _;
     }
 
+    ///@dev Allows owner to set General Investors Address.
     function setGI(address _GIAddress) external onlyOwner{
         generalInvestors = _GIAddress;
     }
 
+    ///@dev Allows owner to set Community Treasure Address.
     function setCT(address _CTAddress) external onlyOwner{
         communityTreasury = _CTAddress;
     }
-    
+
+    ///@dev Allows owner to set Vesting Contract Address.
     function setCoreTeam(address _VestingAddress) external onlyOwner{
         vestingAddress = _VestingAddress;
     }
@@ -34,12 +37,14 @@ contract NDAO is ERC20, Ownable{
         //minting 10 million tokens to different parties
     }
 
+    ///@dev Allows Owner to mint NDAO tokens and send to other functional contracts only once.
     function initialMinter() external onlyOwner onlyOnce{
         _mint(generalInvestors, 4000000 ether);
         _mint (communityTreasury ,3000000 ether);
         _mint (vestingAddress, 5000000 ether);
     }
 
+    ///@dev Allows only Community Treasury to burn the NDAO tokens.
     function burn(uint amount) external {
         require(msg.sender == communityTreasury,"Only treasury can burn");
         _burn(msg.sender,amount);
