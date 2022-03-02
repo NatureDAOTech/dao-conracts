@@ -9,11 +9,13 @@ contract signerCheck is EIP712{
     string private constant SIGNING_DOMAIN = "NDAO";
     string private constant SIGNATURE_VERSION = "1";
 
+    //_addr.call{value: msg.value, gas: 5000}(
+            // abi.encodeWithSignature("foo(string,uint256)", "call foo", 123)
+
     struct Signer{
         uint proposalId;
         address contractAddress;
-        uint amount;
-        address receiver;
+        bytes functionCall;
         bytes signature;
     }
 
@@ -29,11 +31,10 @@ contract signerCheck is EIP712{
 
     function _hash(Signer memory signer) internal view returns (bytes32) {
         return _hashTypedDataV4(keccak256(abi.encode(
-                keccak256("Signer(uint256 proposalId,address contractAddress,uint256 amount,address receiver)"),
+                keccak256("Signer(uint256 proposalId,address contractAddress,bytes functionCall)"),
                 signer.proposalId,
                 signer.contractAddress,
-                signer.amount,
-                signer.receiver
+                signer.functionCall
             )));
     }
 
