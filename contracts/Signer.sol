@@ -9,9 +9,6 @@ contract signerCheck is EIP712{
     string private constant SIGNING_DOMAIN = "NDAO";
     string private constant SIGNATURE_VERSION = "1";
 
-    //_addr.call{value: msg.value, gas: 5000}(
-            // abi.encodeWithSignature("foo(string,uint256)", "call foo", 123)
-
     struct Signer{
         uint proposalId;
         address contractAddress;
