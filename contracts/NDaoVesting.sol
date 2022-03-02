@@ -11,27 +11,30 @@ contract NDAOVesting {
 
     address public founder;
     address public co_founder;
-    address[] public advisoryAndAuditor;
-    address[] public devs;
-    address[] public founders;
+    address[2] public advisoryAndAuditor;
+    address[3] public devs;
 
     uint public lockTime = 10 minutes;
     uint public deployTime;
+
     uint counterForAdv = 1;
     uint counterForDevsOwner = 1;
 
     bool public finalRewardIsClaimed;
 
-    constructor(address _ndao, address[] memory _devs, address _auditor,
-        address _advisor, address _coFounder, address _founder) {
+    constructor(address _ndao, address[3] memory _devs, address[2] memory _auditorAdvisor,
+        address _coFounder, address _founder) {
         NDAO = IERC20(_ndao);
-        advisoryAndAuditor.push(_auditor);
-        advisoryAndAuditor.push(_advisor);
+        //advisor and auditor
+        advisoryAndAuditor = _auditorAdvisor;
+        //founder
         founder = _founder;
-        deployTime = block.timestamp;
+        //co-founder
         co_founder = _coFounder;
-        for (uint i;i<_devs.length;i++)
-            devs.push(_devs[i]);
+        //developers
+        devs = _devs;
+        //start time
+        deployTime = block.timestamp;
     }
 
     function claimAdvisorAndAuditorMonthlyRemuneration() external {
@@ -64,4 +67,5 @@ contract NDAOVesting {
         NDAO.transfer(co_founder, 400_000 ether);
         finalRewardIsClaimed = true;
     }
+
 }

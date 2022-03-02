@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/draft-EIP712.sol";
+import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 
 contract signerCheck is EIP712{
 
