@@ -34,7 +34,7 @@ contract signerCheck is EIP712{
                 keccak256("Signer(uint256 proposalId,address contractAddress,bytes functionCall)"),
                 signer.proposalId,
                 signer.contractAddress,
-                signer.functionCall
+                keccak256(signer.functionCall)
             )));
     }
 
