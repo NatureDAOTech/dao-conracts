@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -62,7 +62,7 @@ contract NDAOVesting {
     ///@notice Allows Devs, Auditors, Advisors, Co-founder and Founder to claim a one time reward after 2 years.
     function claimFinalReward() external {
         require(!finalRewardIsClaimed, "Final Reward already claimed");
-        require(block.timestamp - deployTime> lockTime, 'Reward Will Be Published After 2 years only');
+        require(block.timestamp - deployTime > lockTime, 'Reward Will Be Published After 2 years only');
         for (uint i;i<devs.length;i++) {
             NDAO.transfer(devs[i],200_000 ether);
         }

@@ -20,4 +20,5 @@ describe('NDAO ICO Testing', async function(){
     it('Test: Buying NDAO tokens', async function(){
         await ico.connect(owner).Invest(5);
     });
+
 });

@@ -12,6 +12,13 @@ contract NDAO is ERC20, Ownable{
 
     bool isInitialized;
 
+    constructor (address _icoContract, address _multisig, address _vesting) ERC20 ("NatureDAO","NDAO") {
+        //minting 10 million tokens to different parties
+        generalInvestors = _icoContract;
+        communityTreasury = _multisig;
+        vestingAddress = _vesting;
+    }
+
     modifier onlyOnce {
         require(!isInitialized,"Already initialized");
         isInitialized = true;
@@ -38,8 +45,8 @@ contract NDAO is ERC20, Ownable{
         vestingAddress = _VestingAddress;
     }
 
-    constructor () ERC20 ("NatureDAO","NDAO") {
-        //minting 10 million tokens to different parties
+    function mintTokens(address _to, uint _amount) external onlyTreasury{
+        _mint(_to, _amount);
     }
 
     ///@dev Allows Owner to mint NDAO tokens and send to other functional contracts only once.
@@ -50,9 +57,8 @@ contract NDAO is ERC20, Ownable{
     }
 
     ///@dev Allows only Community Treasury to burn the NDAO tokens.
-    function burn(uint amount) external {
-        require(msg.sender == communityTreasury,"Only treasury can burn");
+    ///@param amount: Enter the amount of tokens to burn.
+    function burn(uint amount) external onlyTreasury{
         _burn(msg.sender,amount);
     }
-
 }

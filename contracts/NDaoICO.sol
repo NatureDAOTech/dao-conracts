@@ -53,4 +53,5 @@ contract NDAOICO is Ownable, Pausable, ReentrancyGuard{
     function changeBasePrice(uint _amt) public onlyOwner{
         basePriceNDAO = _amt;
     }
+
 }
