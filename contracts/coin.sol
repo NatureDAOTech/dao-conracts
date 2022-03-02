@@ -13,7 +13,7 @@ contract Anyx is ERC20, Ownable{
         return 6;
     }
 
-    function mintTokens(uint _amt) public onlyOwner{
+    function mintTokens(uint _amt) public{
         _mint(msg.sender, _amt * (10 ** uint256(decimals())));
     }
 
