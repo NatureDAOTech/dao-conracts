@@ -3,6 +3,7 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+///@author Ace, Alfa, Anyx
 contract NDAO is ERC20, Ownable{
 
     address public generalInvestors;
@@ -23,10 +24,6 @@ contract NDAO is ERC20, Ownable{
 
     function setCT(address _CTAddress) external onlyOwner{
         communityTreasury = _CTAddress;
-    }
-    
-    function ownerMint(address _to, uint _amount) external onlyOwner {
-        _mint(_to, _amount);
     }
     
     function setCoreTeam(address _VestingAddress) external onlyOwner{

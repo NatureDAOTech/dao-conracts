@@ -2,9 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import "./base/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./Signer.sol";
 
+///@author Ace, Alfa, Anyx
 contract Treasury is signerCheck{
 
     struct party{
