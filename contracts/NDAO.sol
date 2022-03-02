@@ -18,18 +18,23 @@ contract NDAO is ERC20, Ownable{
         _;
     }
 
+    modifier onlyTreasury{
+        require(msg.sender == communityTreasury,"Not treasury");
+        _;
+    }
+
     ///@dev Allows owner to set General Investors Address.
-    function setGI(address _GIAddress) external onlyOwner{
+    function setGI(address _GIAddress) external onlyTreasury{
         generalInvestors = _GIAddress;
     }
 
     ///@dev Allows owner to set Community Treasure Address.
-    function setCT(address _CTAddress) external onlyOwner{
+    function setCT(address _CTAddress) external onlyTreasury{
         communityTreasury = _CTAddress;
     }
 
     ///@dev Allows owner to set Vesting Contract Address.
-    function setCoreTeam(address _VestingAddress) external onlyOwner{
+    function setCoreTeam(address _VestingAddress) external onlyTreasury{
         vestingAddress = _VestingAddress;
     }
 
