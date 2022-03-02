@@ -2,9 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import "./base/IERC20.sol";
-import "./base/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
+///@author Ace, Alfa, Anyx
 contract NDAOVesting {
 
     IERC20 NDAO;
@@ -37,6 +38,7 @@ contract NDAOVesting {
         deployTime = block.timestamp;
     }
 
+    ///@notice Allows the Advisors and Auditors to claim NDAO tokens on monthly basis for 5 months.
     function claimAdvisorAndAuditorMonthlyRemuneration() external {
         require(block.timestamp > deployTime + counterForAdv*2 minutes,'Salary not unlocked for the next month');
         require(counterForAdv <= 5,'Remuneration period over');
@@ -45,7 +47,7 @@ contract NDAOVesting {
         }
         counterForAdv++;
     }
-
+    ///@notice Allows the Devs and owner to claim for 2yrs at a monthly interval
     function claimDevsAndOwnerMonthlyRemuneration() external {
         require(block.timestamp > deployTime + counterForDevsOwner*2 minutes,'Salary not unlocked for the next month');
         require (counterForDevsOwner <= 24,'Remuneration period over');
@@ -57,6 +59,7 @@ contract NDAOVesting {
         counterForDevsOwner++;
     }
 
+    ///@notice Allows Devs, Auditors, Advisors, Co-founder and Founder to claim a one time reward after 2 years.
     function claimFinalReward() external {
         require(!finalRewardIsClaimed, "Final Reward already claimed");
         require(block.timestamp - deployTime> lockTime, 'Reward Will Be Published After 2 years only');
