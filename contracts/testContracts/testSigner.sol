@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 
-contract testsignerCheck is EIP712{
+contract testSignerCheck is EIP712{
 
     string private constant SIGNING_DOMAIN = "NDAO";
     string private constant SIGNATURE_VERSION = "1";

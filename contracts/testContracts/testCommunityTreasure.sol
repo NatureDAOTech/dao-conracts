@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import "./Signer.sol";
+import "./testSigner.sol";
 
-contract testDAOMultisig is signerCheck{
+contract testDAOMultisig is testSignerCheck{
 
     struct party{
         bool isParty;

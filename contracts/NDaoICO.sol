@@ -1,8 +1,9 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
-import "./NDAO.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import '@openzeppelin/contracts/security/Pausable.sol';
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 ///@author Ace, Alfa, Anyx
 contract NDAOICO is Ownable, Pausable, ReentrancyGuard{

@@ -12,11 +12,11 @@ contract testNDAO is ERC20, Ownable{
 
     bool isInitialized;
 
-    constructor (address _icoContract, address _multisig, address _vesting) ERC20 ("NatureDAO","NDAO") {
+    constructor () ERC20 ("NatureDAO","NDAO") {
         //minting 10 million tokens to different parties
-        generalInvestors = _icoContract;
-        communityTreasury = _multisig;
-        vestingAddress = _vesting;
+//        generalInvestors = _icoContract;
+//        communityTreasury = _multisig;
+//        vestingAddress = _vesting;
     }
 
     modifier onlyOnce {
@@ -31,7 +31,7 @@ contract testNDAO is ERC20, Ownable{
     }
 
     ///@dev Allows owner to set General Investors Address.
-    function setGI(address _GIAddress) external onlyTreasury{
+    function setGI(address _GIAddress) external {
         generalInvestors = _GIAddress;
     }
 
@@ -52,8 +52,8 @@ contract testNDAO is ERC20, Ownable{
     ///@dev Allows Owner to mint NDAO tokens and send to other functional contracts only once.
     function initialMinter() external onlyOwner onlyOnce{
         _mint(generalInvestors, 4000000 ether);
-        _mint (communityTreasury ,3000000 ether);
-        _mint (vestingAddress, 5000000 ether);
+//        _mint (communityTreasury ,3000000 ether);
+//        _mint (vestingAddress, 5000000 ether);
     }
 
     ///@dev Allows only Community Treasury to burn the NDAO tokens.

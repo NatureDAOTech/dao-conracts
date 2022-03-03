@@ -1,8 +1,9 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
-import "./NDAO.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import '@openzeppelin/contracts/security/Pausable.sol';
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 ///@author Ace, Alfa, Anyx
 contract testNDAOICO is Ownable, Pausable, ReentrancyGuard{
@@ -25,7 +26,7 @@ contract testNDAOICO is Ownable, Pausable, ReentrancyGuard{
     function Invest (uint _tokensToBuy) external nonReentrant whenNotPaused{
         uint amount = _tokensToBuy* basePriceNDAO/10**2;
         mUSDT.transferFrom(_msgSender(),address(this),amount);
-        NDao.transfer(_msgSender(), _tokensToBuy*10**16);
+         NDao.transfer(_msgSender(), _tokensToBuy*10**16);
     }
 
     ///@dev Allows the owner to withdraw all the unsold NDAO tokens.
@@ -53,5 +54,4 @@ contract testNDAOICO is Ownable, Pausable, ReentrancyGuard{
     function changeBasePrice(uint _amt) public onlyOwner{
         basePriceNDAO = _amt;
     }
-
 }
