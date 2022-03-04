@@ -30,6 +30,8 @@ contract testNDAO is ERC20, Ownable{
         _;
     }
 
+//    -------------///@dev Remove onlyTreasury for testing-------------------------
+
     ///@dev Allows owner to set General Investors Address.
     function setGI(address _GIAddress) external {
         generalInvestors = _GIAddress;
@@ -41,7 +43,7 @@ contract testNDAO is ERC20, Ownable{
     }
 
     ///@dev Allows owner to set Vesting Contract Address.
-    function setCoreTeam(address _VestingAddress) external onlyTreasury{
+    function setCoreTeam(address _VestingAddress) external {
         vestingAddress = _VestingAddress;
     }
 
@@ -51,9 +53,9 @@ contract testNDAO is ERC20, Ownable{
 
     ///@dev Allows Owner to mint NDAO tokens and send to other functional contracts only once.
     function initialMinter() external onlyOwner onlyOnce{
-        _mint(generalInvestors, 4000000 ether);
+//        _mint(generalInvestors, 4000000 ether);
 //        _mint (communityTreasury ,3000000 ether);
-//        _mint (vestingAddress, 5000000 ether);
+        _mint (vestingAddress, 5000000 ether);
     }
 
     ///@dev Allows only Community Treasury to burn the NDAO tokens.
