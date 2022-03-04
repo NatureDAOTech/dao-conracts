@@ -71,4 +71,25 @@ contract NDAOVesting {
         finalRewardIsClaimed = true;
     }
 
+    modifier onlyTreasury{
+        require(msg.sender == communityTreasury,"Not treasury");
+        _;
+    }
+
+    function changeAddress(address _changedAdd, uint8 _addressIndex) external onlyTreasury{
+        require(_addressIndex < 7, "Invalid Address Index");
+        if(_addressIndex == 0){
+            founder = _changedAdd;
+        }
+        else if(_addressIndex == 1){
+            co_founder = _changedAdd;
+        }
+        else if(_addressIndex < 5){
+            devs[_addressIndex-2] = _changedAdd;
+        }
+        else{
+            advisoryAndAuditor[_addressIndex - 5] = _changedAdd;
+        }
+    }
+
 }

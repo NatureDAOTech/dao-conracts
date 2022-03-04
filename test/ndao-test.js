@@ -52,7 +52,7 @@ describe('NDAO ICO Testing', async function(){
     });
 });
 
-describe("NDAO Vesting Testing", async function(){
+describe("NDAO Vesting Contract Testing", async function(){
     let Aragorn, Bilbo, Cersei, Daenerys, Elijah, Ferb, Gandalf, ndao, anyx, vesting, multisig;
     beforeEach("Pre-requisites", async function(){
         [Aragorn, Bilbo, Cersei, Daenerys, Elijah, Ferb, Gandalf] = await ethers.getSigners();
