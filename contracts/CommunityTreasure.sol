@@ -38,6 +38,7 @@ contract DAOMultisig is signerCheck{
             }
         }
         require(count >= 3,"Quorum not reached");
+        proposalFulfilled[proposalId] = true;
         (bool success,bytes memory data) = contractAddress.call{value:_amount,gas:_gas}(functionCall);
         
         emit fulfillment(proposalId, success, data);
