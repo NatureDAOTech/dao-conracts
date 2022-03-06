@@ -12,6 +12,8 @@ contract signerCheck is EIP712{
     struct Signer{
         uint proposalId;
         address contractAddress;
+        uint amount;
+        uint gas;
         bytes functionCall;
         bytes signature;
     }
@@ -28,9 +30,11 @@ contract signerCheck is EIP712{
 
     function _hash(Signer memory signer) internal view returns (bytes32) {
         return _hashTypedDataV4(keccak256(abi.encode(
-                keccak256("Signer(uint256 proposalId,address contractAddress,bytes functionCall)"),
+                keccak256("Signer(uint256 proposalId,address contractAddress,uint256 amount,uint256 gas,bytes functionCall)"),
                 signer.proposalId,
                 signer.contractAddress,
+                signer.amount,
+                signer.gas,
                 keccak256(signer.functionCall)
             )));
     }

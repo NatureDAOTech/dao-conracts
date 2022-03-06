@@ -23,11 +23,11 @@ contract DAOMultisig is signerCheck{
         }
     }
 
-    function callMultiSig(uint proposalId,address contractAddress,bytes memory functionCall,bytes[] memory signatures) external payable{
+    function callMultiSig(uint proposalId,address contractAddress,uint _amount,uint _gas,bytes memory functionCall,bytes[] memory signatures) external payable{
         require(!proposalFulfilled[proposalId],"Already fulfilled");
         bool[5] memory votes;
         for(uint i=0;i<signatures.length;i++){
-            address partyAddress = getSigner(Signer(proposalId,contractAddress,functionCall,signatures[i]));
+            address partyAddress = getSigner(Signer(proposalId,contractAddress,_amount,_gas,functionCall,signatures[i]));
             require(holders[partyAddress].isParty,"Not holder");
             votes[holders[partyAddress].index] = true;
         }
@@ -37,9 +37,12 @@ contract DAOMultisig is signerCheck{
                 count++;
             }
         }
-        (bool success,bytes memory data) = contractAddress.call{value:msg.value}(functionCall);
+        require(count >= 3,"Quorum not reached");
+        (bool success,bytes memory data) = contractAddress.call{value:_amount,gas:_gas}(functionCall);
         
         emit fulfillment(proposalId, success, data);
     }
+
+    receive() external payable{}
 
 }
