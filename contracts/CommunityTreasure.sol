@@ -23,7 +23,7 @@ contract DAOMultisig is signerCheck{
         }
     }
 
-    function callMultiSig(uint proposalId,address contractAddress,uint _amount,uint _gas,bytes memory functionCall,bytes[] memory signatures) external payable{
+    function callMultiSig(uint proposalId,address contractAddress,uint _amount,uint _gas, bytes memory functionCall,bytes[] memory signatures) external payable{
         require(!proposalFulfilled[proposalId],"Already fulfilled");
         bool[5] memory votes;
         for(uint i=0;i<signatures.length;i++){

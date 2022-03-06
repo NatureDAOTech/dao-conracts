@@ -3,6 +3,8 @@ require("@nomiclabs/hardhat-etherscan");
 require("@nomiclabs/hardhat-waffle");
 require("hardhat-gas-reporter");
 require("solidity-coverage");
+require("@nomiclabs/hardhat-etherscan");
+
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -24,9 +26,8 @@ module.exports = {
   solidity: "0.8.7",
   networks: {
     matic: {
-      url: process.env.ALCHEMY_API_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.INFURA_KEY}`,
+      accounts:[`${process.env.PRIVATE_KEY}`]
     },
   },
   gasReporter: {
@@ -34,6 +35,9 @@ module.exports = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: {
+      // polygon: "YOUR_POLYGONSCAN_API_KEY",
+      polygonMumbai: process.env.POLYGON_SCAN_API,
+    }
   },
 };

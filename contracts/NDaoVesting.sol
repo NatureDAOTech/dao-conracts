@@ -14,7 +14,7 @@ contract NDAOVesting {
     address public co_founder;
     address[2] public advisoryAndAuditor;
     address[3] public devs;
-
+    address public communityTreasury;
     uint public lockTime = 10 minutes;
     uint public deployTime;
 
@@ -24,7 +24,7 @@ contract NDAOVesting {
     bool public finalRewardIsClaimed;
 
     constructor(address _ndao, address[3] memory _devs, address[2] memory _auditorAdvisor,
-        address _coFounder, address _founder) {
+        address _coFounder, address _founder, address _communityTreasury) {
         NDAO = IERC20(_ndao);
         //advisor and auditor
         advisoryAndAuditor = _auditorAdvisor;
@@ -36,6 +36,8 @@ contract NDAOVesting {
         devs = _devs;
         //start time
         deployTime = block.timestamp;
+        //communityTreasury address
+        communityTreasury = _communityTreasury;
     }
 
     ///@notice Allows the Advisors and Auditors to claim NDAO tokens on monthly basis for 5 months.

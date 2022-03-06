@@ -16,24 +16,31 @@ async function main() {
 
   // We get the contract to deploy
 
-  [player1, player2, player3, player4] = await ethers.getSigners()
+  [player1] = await ethers.getSigners()
   const NDAOICO = await hre.ethers.getContractFactory("NDAOICO");
   const NDAOTOKEN = await hre.ethers.getContractFactory("NDAO")
+  const anikCoin = await  hre.ethers.getContractFactory("Anyx")
+  const VESTING = await hre.ethers.getContractFactory("NDAOVesting")
+  const CommunityTreasury = await hre.ethers.getContractFactory("DAOMultisig")
 
-  let token = await NDAOTOKEN.deploy()
+  let token = await NDAOTOKEN.deploy(player1.address, player1.address, player1.address)
+  console.log("NDao address: ", token.address)
 
-  token = token.deployed()
-
-  await token.setCT (player1.address);
-  await token.setCoreTeam (player2.address);
-  await token.setAdv (player3.address);
-  await token.setAuditors (player4.address);
-
-  let ico = await NDAOICO.deploy(player1.address, token.address, 1644758027, 1000000)
-  ico = ico.deployed()
-  await token.setGI (ico.address);
-  await ico.setStatusToActive();
   // console.log()
+  let stable = await  anikCoin.deploy()
+  console.log("AnikCoin address: ", stable.address)
+
+  let ico = await NDAOICO.deploy(stable.address, token.address)
+  console.log("ICO address: ", ico.address)
+
+  let communityTreasury = await  CommunityTreasury.deploy([player1.address, player1.address, player1.address, player1.address, player1.address])
+  console.log("CommunityTreasury address: ", communityTreasury.address)
+
+
+  let vesting = await VESTING.deploy(token.address,[player1.address, player1.address, player1.address], [player1.address,player1.address],
+            player1.address, player1.address, communityTreasury.address)
+  console.log("Vesting address: ", vesting.address)
+  console.log("Player1 address: ", player1.address)
 }
 
 // We recommend this pattern to be able to use async/await everywhere
