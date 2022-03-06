@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 ///@author Ace, Alfa, Anyx
-contract NDAOVesting {
+contract testNDAOVesting {
 
     IERC20 NDAO;
 
@@ -15,8 +15,12 @@ contract NDAOVesting {
     address[2] public advisoryAndAuditor;
     address[3] public devs;
 
-    uint public lockTime = 10 minutes;
+    uint public lockTime = 30 seconds;
     uint public deployTime;
+
+    ///@dev Test Uint(s) are declared below
+    uint month = 10 seconds;
+    uint advMaxLimit = 2;
 
     uint counterForAdv = 1;
     uint counterForDevsOwner = 1;
@@ -40,8 +44,8 @@ contract NDAOVesting {
 
     ///@notice Allows the Advisors and Auditors to claim NDAO tokens on monthly basis for 5 months.
     function claimAdvisorAndAuditorMonthlyRemuneration() external {
-        require(block.timestamp > deployTime + counterForAdv*2 minutes,'Salary not unlocked for the next month');
-        require(counterForAdv <= 5,'Remuneration period over');
+        require(block.timestamp > deployTime + counterForAdv* month,'Salary not unlocked for the next month');
+        require(counterForAdv <= advMaxLimit,'Remuneration period over');
         for (uint i;i<advisoryAndAuditor.length;i++) {
             NDAO.transfer(advisoryAndAuditor[i],100_000 ether);
         }
@@ -49,7 +53,7 @@ contract NDAOVesting {
     }
     ///@notice Allows the Devs and owner to claim for 2yrs at a monthly interval
     function claimDevsAndOwnerMonthlyRemuneration() external {
-        require(block.timestamp > deployTime + counterForDevsOwner*2 minutes,'Salary not unlocked for the next month');
+        require(block.timestamp > deployTime + counterForDevsOwner* month,'Salary not unlocked for the next month');
         require (counterForDevsOwner <= 24,'Remuneration period over');
         for (uint i;i<devs.length;i++){
             NDAO.transfer(devs[i],10_000 ether);
@@ -62,7 +66,7 @@ contract NDAOVesting {
     ///@notice Allows Devs, Auditors, Advisors, Co-founder and Founder to claim a one time reward after 2 years.
     function claimFinalReward() external {
         require(!finalRewardIsClaimed, "Final Reward already claimed");
-        require(block.timestamp - deployTime > lockTime, 'Reward Will Be Published After 2 years only');
+        require(block.timestamp - deployTime > lockTime, 'Reward can be claimed after 2 years only');
         for (uint i;i<devs.length;i++) {
             NDAO.transfer(devs[i],200_000 ether);
         }
@@ -70,26 +74,6 @@ contract NDAOVesting {
         NDAO.transfer(co_founder, 400_000 ether);
         finalRewardIsClaimed = true;
     }
-
-    modifier onlyTreasury{
-        require(msg.sender == communityTreasury,"Not treasury");
-        _;
-    }
-
-    function changeAddress(address _changedAdd, uint8 _addressIndex) external onlyTreasury{
-        require(_addressIndex < 7, "Invalid Address Index");
-        if(_addressIndex == 0){
-            founder = _changedAdd;
-        }
-        else if(_addressIndex == 1){
-            co_founder = _changedAdd;
-        }
-        else if(_addressIndex < 5){
-            devs[_addressIndex-2] = _changedAdd;
-        }
-        else{
-            advisoryAndAuditor[_addressIndex - 5] = _changedAdd;
-        }
-    }
-
 }
+
+
