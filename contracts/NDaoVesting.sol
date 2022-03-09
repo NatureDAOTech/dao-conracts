@@ -19,7 +19,7 @@ contract NDAOVesting {
     uint public deployTime;
 
     uint counterForAdv = 1;
-    uint counterForDevsOwner = 1;
+    uint[3] counterForDevsOwner = [1,1,1];
 
     bool public finalRewardIsClaimed;
 
@@ -44,21 +44,48 @@ contract NDAOVesting {
     function claimAdvisorAndAuditorMonthlyRemuneration() external {
         require(block.timestamp > deployTime + counterForAdv*2 minutes,'Salary not unlocked for the next month');
         require(counterForAdv <= 5,'Remuneration period over');
+        counterForAdv++;
         for (uint i;i<advisoryAndAuditor.length;i++) {
             NDAO.transfer(advisoryAndAuditor[i],100_000 ether);
         }
-        counterForAdv++;
     }
     ///@notice Allows the Devs and owner to claim for 2yrs at a monthly interval
-    function claimDevsAndOwnerMonthlyRemuneration() external {
-        require(block.timestamp > deployTime + counterForDevsOwner*2 minutes,'Salary not unlocked for the next month');
-        require (counterForDevsOwner <= 24,'Remuneration period over');
+    function claimDevsAndOwnerMonthlyRemuneration(uint8[] memory claim) external {
+        require(claim.length < 4,"Invalid claim code");
+        for(uint i=0;i<claim.length;i++){
+            if(claim[i] == 0){
+                claimFounderMonthlyInternal();
+            }
+            else if(claim[i] == 1){
+                claimCoFounderMonthlyInternal();
+            }
+            else{
+                claimDevsMonthlyRenumeration();
+            }
+        }
+    }
+
+    function claimFounderMonthlyInternal() private {
+        require(block.timestamp > deployTime + counterForDevsOwner[0] * 2 minutes,'Salary not unlocked for the next month');
+        require (counterForDevsOwner[0] <= 24,'Remuneration period over');
+        counterForDevsOwner[0]++;
+        NDAO.transfer(founder, 33_000 ether);
+    }
+
+    function claimCoFounderMonthlyInternal() private {
+        require(block.timestamp > deployTime + counterForDevsOwner[1] * 2 minutes,'Salary not unlocked for the next month');
+        require (counterForDevsOwner[1] <= 24,'Remuneration period over');
+        counterForDevsOwner[1]++;
+        NDAO.transfer(co_founder, 20_000 ether);
+    }
+
+    function claimDevsMonthlyRenumeration() private {
+        require(block.timestamp > deployTime + counterForDevsOwner[2] * 2 minutes,'Salary not unlocked for the next month');
+        require (counterForDevsOwner[2] <= 24,'Remuneration period over');
+        counterForDevsOwner[2]++;
         for (uint i;i<devs.length;i++){
             NDAO.transfer(devs[i],10_000 ether);
         }
-        NDAO.transfer(founder, 33_000 ether);
-        NDAO.transfer(co_founder, 20_000 ether);
-        counterForDevsOwner++;
     }
 
     ///@notice Allows Devs, Auditors, Advisors, Co-founder and Founder to claim a one time reward after 2 years.
