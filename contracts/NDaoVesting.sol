@@ -18,8 +18,8 @@ contract NDAOVesting {
     uint public lockTime = 104 weeks;
     uint public deployTime;
 
-    uint counterForAdv = 1;
-    uint[3] counterForDevsOwner = [1,1,1];
+    uint public counterForAdv = 1;
+    uint[3] public counterForDevsOwner = [1,1,1];
 
     bool public finalRewardIsClaimed;
 
