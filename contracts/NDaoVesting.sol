@@ -121,4 +121,8 @@ contract NDAOVesting {
         }
     }
 
+    function changeDevAddress (address[] memory _addresses) external onlyTreasury {
+        devs = _addresses;
+    }
+
 }
