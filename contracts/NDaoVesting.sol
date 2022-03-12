@@ -50,6 +50,7 @@ contract NDAOVesting {
         }
     }
     ///@notice Allows the Devs and owner to claim for 2yrs at a monthly interval
+    ///@param claim This is the claim code for devs, owner and co-owner
     function claimDevsAndOwnerMonthlyRemuneration(uint8[] memory claim) external {
         require(claim.length < 4,"Invalid claim code");
         for(uint i=0;i<claim.length;i++){
@@ -104,7 +105,9 @@ contract NDAOVesting {
         require(msg.sender == communityTreasury,"Not treasury");
         _;
     }
-
+    ///@notice This allows users to change the address.
+    ///@param _changedAdd is the address of the new address to be changed with the old addresses.
+    ///@param _addressIndex This indicates the index for team members.
     function changeAddress(address _changedAdd, uint8 _addressIndex) external onlyTreasury{
         require(_addressIndex < 7, "Invalid Address Index");
         if(_addressIndex == 0){
