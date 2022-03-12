@@ -92,12 +92,12 @@ contract NDAOVesting {
     function claimFinalReward() external {
         require(!finalRewardIsClaimed, "Final Reward already claimed");
         require(block.timestamp - deployTime > lockTime, 'Reward Will Be Published After 2 years only');
+        finalRewardIsClaimed = true;
         for (uint i;i<devs.length;i++) {
             NDAO.transfer(devs[i],200_000 ether);
         }
         NDAO.transfer(founder, 1_000_000 ether);
         NDAO.transfer(co_founder, 400_000 ether);
-        finalRewardIsClaimed = true;
     }
 
     modifier onlyTreasury{
