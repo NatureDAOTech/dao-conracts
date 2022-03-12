@@ -36,7 +36,7 @@ contract NDAOICO is Ownable, Pausable, ReentrancyGuard{
     ///@dev Allows the owner to extract the investment while the ICO is running
     ///@param _to: Enter the address who will withdraw the investment,
     ///       _amount: Enter the amount of USDT to be withdrawn.
-    function ExtractInvestment(address _to, uint _amount) public onlyOwner{
+    function ExtractInvestment(address _to, uint _amount) external onlyOwner{
         mUSDT.transfer(_to, _amount);
     }
 
@@ -49,7 +49,7 @@ contract NDAOICO is Ownable, Pausable, ReentrancyGuard{
 
     ///@dev Allows the owner to change the base price of NDAO tokens
     ///@param _amt: Enter the new amount you want to set for the NDAO tokens.
-    function changeBasePrice(uint _amt) public onlyOwner{
+    function changeBasePrice(uint _amt) external onlyOwner{
         basePriceNDAO = _amt;
     }
 
