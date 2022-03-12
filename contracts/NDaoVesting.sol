@@ -15,7 +15,7 @@ contract NDAOVesting {
     address[2] public advisoryAndAuditor;
     address[3] public devs;
     address public communityTreasury;
-    uint public lockTime = 10 minutes;
+    uint public lockTime = 104 weeks;
     uint public deployTime;
 
     uint counterForAdv = 1;
@@ -42,7 +42,7 @@ contract NDAOVesting {
 
     ///@notice Allows the Advisors and Auditors to claim NDAO tokens on monthly basis for 5 months.
     function claimAdvisorAndAuditorMonthlyRemuneration() external {
-        require(block.timestamp > deployTime + counterForAdv*2 minutes,'Salary not unlocked for the next month');
+        require(block.timestamp > deployTime + counterForAdv* 30 days,'Salary not unlocked for the next month');
         require(counterForAdv <= 5,'Remuneration period over');
         counterForAdv++;
         for (uint i;i<advisoryAndAuditor.length;i++) {
@@ -66,21 +66,21 @@ contract NDAOVesting {
     }
 
     function claimFounderMonthlyInternal() private {
-        require(block.timestamp > deployTime + counterForDevsOwner[0] * 2 minutes,'Salary not unlocked for the next month');
+        require(block.timestamp > deployTime + counterForDevsOwner[0] * 30 days,'Salary not unlocked for the next month');
         require (counterForDevsOwner[0] <= 24,'Remuneration period over');
         counterForDevsOwner[0]++;
         NDAO.transfer(founder, 33_000 ether);
     }
 
     function claimCoFounderMonthlyInternal() private {
-        require(block.timestamp > deployTime + counterForDevsOwner[1] * 2 minutes,'Salary not unlocked for the next month');
+        require(block.timestamp > deployTime + counterForDevsOwner[1] * 30 days,'Salary not unlocked for the next month');
         require (counterForDevsOwner[1] <= 24,'Remuneration period over');
         counterForDevsOwner[1]++;
         NDAO.transfer(co_founder, 20_000 ether);
     }
 
     function claimDevsMonthlyRenumeration() private {
-        require(block.timestamp > deployTime + counterForDevsOwner[2] * 2 minutes,'Salary not unlocked for the next month');
+        require(block.timestamp > deployTime + counterForDevsOwner[2] * 30 days,'Salary not unlocked for the next month');
         require (counterForDevsOwner[2] <= 24,'Remuneration period over');
         counterForDevsOwner[2]++;
         for (uint i;i<devs.length;i++){
