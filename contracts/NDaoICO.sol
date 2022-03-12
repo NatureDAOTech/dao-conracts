@@ -10,9 +10,7 @@ contract NDAOICO is Ownable, Pausable, ReentrancyGuard{
 
     IERC20 NDao;
     IERC20 mUSDT;
-
-    address maticUSDT = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
-
+    
     uint public basePriceNDAO = 0.25 *10**6; //0.25 USDT per NDAO
 
     constructor(address _mUSDT, address _NDAO) {
