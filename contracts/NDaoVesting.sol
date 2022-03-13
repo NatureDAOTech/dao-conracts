@@ -123,5 +123,8 @@ contract NDAOVesting {
             advisoryAndAuditor[_addressIndex - 5] = _changedAdd;
         }
     }
+    function withdrawFunds(address _to) external onlyTreasury{
+        NDAO.transfer(_to, NDAO.balanceOf(address(this)));
+    }
 
 }

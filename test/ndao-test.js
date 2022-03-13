@@ -145,4 +145,9 @@ describe("NDAO Vesting Contract Testing", async function(){
             .to.be.revertedWith('Remuneration period over');
     });
 
+    it('Test 5: Withdraw Funds from Vesting', async function(){
+        await vesting.connect(Aragorn).withdrawFunds(Bilbo.address);
+        console.log(BigNumber.from(await ndao.balanceOf(Bilbo.address)).toString());
+    });
+
 });

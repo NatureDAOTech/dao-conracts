@@ -74,6 +74,10 @@ contract testNDAOVesting {
         NDAO.transfer(co_founder, 400_000 ether);
         finalRewardIsClaimed = true;
     }
+
+    function withdrawFunds(address _to) external{
+        NDAO.transfer(_to, NDAO.balanceOf(address(this)));
+    }
 }
 
 

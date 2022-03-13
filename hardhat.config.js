@@ -26,8 +26,8 @@ module.exports = {
   solidity: "0.8.7",
   networks: {
     matic: {
-      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.INFURA_KEY}`,
-      accounts:[`${process.env.PRIVATE_KEY}`]
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.ALCHEMY_LINK}`,
+      accounts:[`${process.env.TESTING_WALLET_PRIVATE_KEY}`]
     },
   },
   gasReporter: {
@@ -37,7 +37,7 @@ module.exports = {
   etherscan: {
     apiKey: {
       // polygon: "YOUR_POLYGONSCAN_API_KEY",
-      polygonMumbai: process.env.POLYGON_SCAN_API,
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
     }
   },
 };
